@@ -638,6 +638,7 @@ class SeniorAgent(BaseMinerNeuron):
             # Break cycle
             return self.random_walk(synapse)
 
+        self.maze_run_explore_direction = choice
         return choice, distance
 
     def navigate_to(self, synapse: Observation, target_node: str) -> tuple[str, float]:

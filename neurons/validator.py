@@ -20,6 +20,7 @@
 import asyncio
 import time
 import traceback
+import random
 from urllib.parse import urlparse
 
 import bittensor as bt
@@ -66,6 +67,8 @@ class Validator(BaseValidatorNeuron):
         """
         try:
             # Call Eastworld API to get miner's state and observation.
+            # Temporary jitter to alleviate the server ecs lock issue.
+            await asyncio.sleep(random.uniform(0.0, 1.0))
             res = await self.get_observation()
 
             if res.code == 429:
@@ -88,13 +91,13 @@ class Validator(BaseValidatorNeuron):
             )
             if not uid_is_available:
                 bt.logging.info(f"UID {res.uid} from API is not available for mining.")
-                await asyncio.sleep(10)
+                await asyncio.sleep(1)
                 return
             if res.key != self.metagraph.axons[res.uid].hotkey:
                 bt.logging.info(
                     f"UID {res.uid} hotkey mismatch API:{res.key} Metagraph:{self.metagraph.axons[res.uid].hotkey}"
                 )
-                await asyncio.sleep(10)
+                await asyncio.sleep(5)
                 return
 
             # Skip the miner for a certain period if it is inactive.
@@ -209,14 +212,14 @@ class Validator(BaseValidatorNeuron):
         r = await self.http_client.send(req, auth=self.gen_http_auth())
         if r.status_code > 499:
             raise Exception(
-                f"Failed to submit action to Eastworld server. {r.status_code} {r.text}"
+                f"Failed to submit action ({uid}) to Eastworld server. {r.status_code}"
             )
         ob = r.json()
         if ob.get("code") != 200:
             raise Exception(
-                f"Failed to submit action to Eastworld server. {ob.get('code')} {ob.get('message')}"
+                f"Failed to submit action ({uid}) to Eastworld server. {ob.get('code')} {ob.get('message')}"
             )
-        bt.logging.trace(
+        bt.logging.info(
             f"Action of miner UID {uid} in turn {turns} submitted successfully."
         )
 

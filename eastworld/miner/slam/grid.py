@@ -242,7 +242,11 @@ class OccupancyGridMap:
 
         path_step_threshold = 15.0
         # If node_id is specified, create a new node anyway
-        if node_id is not None:
+        if node_id == nearest_node:
+            bt.logging.warning(
+                f"Duplicate node id {node_id}. No new navigation node added"
+            )
+        elif node_id is not None:
             if nearest_node is not None:
                 self.nav_nodes[node_id] = (pose_index, x, y, node_desc)
                 self._add_nav_edge(node_id, nearest_node, nearest_step)
