@@ -71,7 +71,7 @@ python neurons/validator.py --subtensor.network test --netuid 288 --wallet.name 
 To start validating on mainnet:
 
 ```
-python neurons/validator.py --netuid 94 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --neuron.axon_off --wandb.off --neuron.num_concurrent_forwards 2 --eastworld.endpoint_url="https://mainnet.eastworld.ai"
+python neurons/validator.py --netuid 94 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --neuron.axon_off --wandb.off --neuron.num_concurrent_forwards 8 --eastworld.endpoint_url="https://mainnet.eastworld.ai"
 ```
 
 The validator can be deployed as a persistent service using the following orchestration tools:
