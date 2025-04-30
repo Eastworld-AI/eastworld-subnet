@@ -147,9 +147,9 @@ class SeniorAgent(BaseMinerNeuron):
             self.slam = ISAM2(load_data=True, data_dir=slam_data)
 
         self.llm = openai.AsyncOpenAI(timeout=10)
-        self.model_small = "gemini-2.0-flash-lite"
-        self.model_medium = "gemini-2.0-flash"
-        self.model_large = "gemini-2.0-flash"
+        self.model_small = "gpt-4o-mini"
+        self.model_medium = "gpt-4o-mini"
+        self.model_large = "gpt-4o-mini"
 
         prompt_dir = "eastworld/miner/prompts"
         self.landmark_annotation_step = 0

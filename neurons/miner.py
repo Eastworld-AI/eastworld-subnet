@@ -24,9 +24,9 @@ import bittensor as bt
 
 from eastworld.base.miner import BaseMinerNeuron
 from eastworld.protocol import Observation
-from eastworld.miner.junior import JuniorAgent
+#from eastworld.miner.junior import JuniorAgent
 
-# from eastworld.miner.senior import SeniorAgent
+from eastworld.miner.senior import SeniorAgent
 
 
 class WanderAgent(BaseMinerNeuron):
@@ -104,7 +104,7 @@ class WanderAgent(BaseMinerNeuron):
 if __name__ == "__main__":
     load_dotenv()
 
-    with JuniorAgent() as miner:  # Or try the SeniorAgent(slam_data=None)
+    with SeniorAgent(slam_data=None) as miner:
         while True:
             bt.logging.info(f"Miner is running... {time.time()}")
             time.sleep(30)
