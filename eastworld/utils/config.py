@@ -1,7 +1,7 @@
 # The MIT License (MIT)
-# Copyright © 2023 Yuma Rao
-# Copyright © 2023 Opentensor Foundation
-# Copyright © 2025 Eastworld AI
+# Copyright 2023 Yuma Rao
+# Copyright 2023 Opentensor Foundation
+# Copyright 2025 Eastworld AI
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -173,7 +173,7 @@ def add_miner_args(cls, parser):
         "--eastworld.llm_model",
         type=str,
         help="The model to use for the LLM calls.",
-        default="gpt-4o-mini",
+        default="gemini-2.0-flash",
     )
 
 
@@ -263,7 +263,7 @@ def add_validator_args(cls, parser):
         "--eastworld.llm_model",
         type=str,
         help="The model to use for the LLM calls.",
-        default="gpt-4o-mini",
+        default="gemini-2.0-flash",
     )
 
 

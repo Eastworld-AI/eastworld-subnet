@@ -1,5 +1,5 @@
 # The MIT License (MIT)
-# Copyright © 2025 Eastworld AI
+# Copyright 2025 Eastworld AI
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -23,7 +23,9 @@ import traceback
 from typing import Annotated, TypedDict
 
 import bittensor as bt
+import google.generativeai as genai
 import openai
+from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
@@ -139,6 +141,9 @@ class SeniorAgent(BaseMinerNeuron):
         self.uid = self.metagraph.hotkeys.index(self.wallet.hotkey.ss58_address)
         self.step = 0
 
+        # Load environment variables from .env file
+        load_dotenv()
+
         self.graph = self._build_graph()
 
         if slam_data is None:
@@ -146,10 +151,19 @@ class SeniorAgent(BaseMinerNeuron):
         else:
             self.slam = ISAM2(load_data=True, data_dir=slam_data)
 
+        # Initialize OpenAI client
         self.llm = openai.AsyncOpenAI(timeout=10)
-        self.model_small = "gpt-4o-mini"
-        self.model_medium = "gpt-4o-mini"
-        self.model_large = "gpt-4o-mini"
+        
+        # Initialize Google Generative AI client
+        google_api_key = os.getenv("GOOGLE_API_KEY")
+        if google_api_key:
+            genai.configure(api_key=google_api_key)
+        else:
+            bt.logging.warning("GOOGLE_API_KEY not found in environment variables. Gemini models may not work properly.")
+        
+        self.model_small = "gemini-2.0-flash-lite"
+        self.model_medium = "gemini-2.0-flash"
+        self.model_large = "gemini-2.0-flash"
 
         prompt_dir = "eastworld/miner/prompts"
         self.landmark_annotation_step = 0
@@ -334,8 +348,8 @@ class SeniorAgent(BaseMinerNeuron):
             }
             prompt = self.landmark_annotation_prompt.format(**prompt_context)
             bt.logging.debug(f"Landmark Annotation Prompt: {prompt}")
-            response = await self.llm.chat.completions.create(
-                model=self.model_small,
+            response = await self._call_llm(
+                self.model_small,
                 messages=[{"role": "user", "content": prompt}],
             )
             bt.logging.debug(f"Landmark Annotation Response: {response}")
@@ -389,8 +403,8 @@ class SeniorAgent(BaseMinerNeuron):
                 )
 
             prompt_context = {
-                "goals": "\n".join([f"  - {x}" for x in self.memory.memory["goals"]]),
-                "plans": "\n".join([f"  - {x}" for x in self.memory.memory["plans"]]),
+                "goals": "\n".join(self.memory.memory["goals"]),
+                "plans": "\n".join(self.memory.memory["plans"]),
                 "sensor_readings": "\n".join(
                     [f"  - {', '.join(items)}" for items in synapse.sensor.lidar]
                 ),
@@ -414,8 +428,8 @@ class SeniorAgent(BaseMinerNeuron):
             }
             prompt = self.after_action_review_prompt.format(**prompt_context)
             bt.logging.debug(f"After Action Review Prompt: {prompt}")
-            response = await self.llm.chat.completions.create(
-                model=self.model_large,
+            response = await self._call_llm(
+                self.model_large,
                 messages=[{"role": "user", "content": prompt}],
             )
 
@@ -453,8 +467,8 @@ class SeniorAgent(BaseMinerNeuron):
             }
             prompt = self.objective_reevaluation_prompt.format(**prompt_context)
             bt.logging.debug(f"Objective Reevaluation Prompt: {prompt}")
-            response = await self.llm.chat.completions.create(
-                model=self.model_large,
+            response = await self._call_llm(
+                self.model_large,
                 messages=[{"role": "user", "content": prompt}],
             )
 
@@ -510,8 +524,8 @@ class SeniorAgent(BaseMinerNeuron):
             }
             prompt = self.action_selection_prompt.format(**prompt_context)
             bt.logging.debug(f"Action Selection Prompt: {prompt}")
-            response = await self.llm.chat.completions.create(
-                model=self.model_large,
+            response = await self._call_llm(
+                self.model_large,
                 messages=[{"role": "user", "content": prompt}],
                 tools=[*synapse.action_space, *self.local_action_space],
                 tool_choice="auto",
@@ -578,6 +592,147 @@ class SeniorAgent(BaseMinerNeuron):
             state["errors"].add(f"Action Execution Error: {e}")
         finally:
             return state
+
+    async def _call_llm(self, model, messages, temperature=0.7, max_tokens=1000, tools=None, tool_choice=None):
+        """
+        Unified method to call either OpenAI or Google Gemini models based on the model name.
+        
+        Args:
+            model (str): Model name (either OpenAI or Gemini)
+            messages (list): List of message dictionaries with role and content
+            temperature (float): Temperature for generation
+            max_tokens (int): Maximum tokens to generate
+            tools (list): Optional list of tools for function calling
+            tool_choice (str): Tool choice strategy ("auto" or "none")
+            
+        Returns:
+            Object with response content accessible via .choices[0].message.content
+        """
+        try:
+            if model.startswith("gemini"):
+                # Convert OpenAI message format to Gemini format
+                gemini_messages = []
+                for msg in messages:
+                    if msg["role"] == "system":
+                        # Prepend system message to user message since Gemini doesn't have system role
+                        if len(gemini_messages) > 0 and gemini_messages[0]["role"] == "user":
+                            gemini_messages[0]["content"] = f"{msg['content']}\n\n{gemini_messages[0]['content']}"
+                        else:
+                            # If this is the first message, add as user message
+                            gemini_messages.append({"role": "user", "content": msg["content"]})
+                    else:
+                        gemini_messages.append(msg)
+                        
+                model_name = model
+                if model_name == "gemini-2.0-flash-lite":
+                    model_name = "gemini-1.5-flash"
+                elif model_name == "gemini-2.0-flash":
+                    model_name = "gemini-1.5-pro"
+                
+                # Convert OpenAI tools format to Gemini tools format if provided
+                gemini_tools = None
+                if tools:
+                    gemini_tools = []
+                    for tool in tools:
+                        gemini_tools.append({
+                            "function_declarations": [{
+                                "name": tool["function"]["name"],
+                                "description": tool["function"].get("description", ""),
+                                "parameters": tool["function"].get("parameters", {})
+                            }]
+                        })
+                
+                # Create Gemini model
+                gemini_model = genai.GenerativeModel(
+                    model_name=model_name,
+                    generation_config={
+                        "temperature": temperature,
+                        "max_output_tokens": max_tokens,
+                    },
+                    tools=gemini_tools
+                )
+                
+                # Create a chat session
+                chat = gemini_model.start_chat(history=[])
+                
+                # For simplicity, we'll just send the last user message with tools
+                last_user_message = None
+                for msg in reversed(gemini_messages):
+                    if msg["role"] == "user":
+                        last_user_message = msg["content"]
+                        break
+                
+                if last_user_message:
+                    response = await chat.send_message_async(last_user_message)
+                    
+                    # Handle tool calls if present
+                    if hasattr(response, "candidates") and response.candidates and hasattr(response.candidates[0], "content") and hasattr(response.candidates[0].content, "parts"):
+                        for part in response.candidates[0].content.parts:
+                            if hasattr(part, "function_call"):
+                                # Create a response object similar to OpenAI's format with tool calls
+                                class GeminiToolResponse:
+                                    class Choice:
+                                        class Message:
+                                            class ToolCall:
+                                                def __init__(self, function):
+                                                    self.function = function
+                                                    self.id = "gemini-tool-call-1"
+                                                    self.type = "function"
+                                                
+                                            def __init__(self, content, tool_calls=None):
+                                                self.content = content
+                                                self.tool_calls = tool_calls or []
+                                                
+                                        def __init__(self, text, tool_calls=None):
+                                            self.message = self.Message(text, tool_calls)
+                                            
+                                    def __init__(self, text, tool_calls=None):
+                                        self.choices = [self.Choice(text, tool_calls)]
+                                
+                                tool_calls = [
+                                    GeminiToolResponse.Choice.Message.ToolCall({
+                                        "name": part.function_call.name,
+                                        "arguments": part.function_call.args
+                                    })
+                                ]
+                                
+                                return GeminiToolResponse(response.text, tool_calls)
+                
+                # Create a response object similar to OpenAI's format
+                class GeminiResponse:
+                    class Choice:
+                        class Message:
+                            def __init__(self, content):
+                                self.content = content
+                                self.tool_calls = []
+                                
+                        def __init__(self, text):
+                            self.message = self.Message(text)
+                            
+                    def __init__(self, text):
+                        self.choices = [self.Choice(text)]
+                
+                return GeminiResponse(response.text)
+            else:
+                # Use OpenAI
+                kwargs = {
+                    "model": model,
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens,
+                }
+                
+                if tools:
+                    kwargs["tools"] = tools
+                    
+                if tool_choice:
+                    kwargs["tool_choice"] = tool_choice
+                    
+                return await self.llm.chat.completions.create(**kwargs)
+                
+        except Exception as e:
+            bt.logging.error(f"LLM API call error: {e}")
+            raise e
 
     def random_walk(self, synapse: Observation) -> tuple[str, float]:
         weights = [1] * len(self.directions)
