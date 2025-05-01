@@ -151,8 +151,7 @@ class SeniorAgent(BaseMinerNeuron):
         else:
             self.slam = ISAM2(load_data=True, data_dir=slam_data)
 
-        # Initialize OpenAI client
-        self.llm = openai.AsyncOpenAI(timeout=10)
+        self.llm = None
         
         # Initialize Google Generative AI client
         google_api_key = os.getenv("GOOGLE_API_KEY")
