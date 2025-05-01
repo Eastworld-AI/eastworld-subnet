@@ -67,8 +67,6 @@ class Validator(BaseValidatorNeuron):
         """
         try:
             # Call Eastworld API to get miner's state and observation.
-            # Temporary jitter to alleviate the server ecs lock issue.
-            await asyncio.sleep(random.uniform(0.0, 1.0))
             res = await self.get_observation()
 
             if res.code == 429:
@@ -269,7 +267,7 @@ class Validator(BaseValidatorNeuron):
             if not prompt:
                 return ""
             async with httpx.AsyncClient() as client:
-                llm = AsyncOpenAI(http_client=client, timeout=20)
+                llm = AsyncOpenAI(http_client=client, timeout=10)
                 response = await llm.chat.completions.create(
                     model=self.config.eastworld.llm_model,
                     messages=[{"role": "user", "content": prompt}],

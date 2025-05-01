@@ -3,7 +3,7 @@
 ---
 ## System Requirements
 
-* OpenAI or other LLM service providers, or local vLLM/sglang deployment.
+* OpenAI or other LLM service providers, or local vLLM/SGLang deployment.
 
 
 ## Validate Process
@@ -67,8 +67,18 @@ source .venv/bin/activate
 
 python neurons/validator.py --subtensor.network test --netuid 288 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --neuron.axon_off --wandb.off --eastworld.endpoint_url="https://testnet.eastworld.ai"
 ```
+##### Running with vLLM or SGLang
 
-To start validating on mainnet:
+When deploying with local vLLM or SGLang:
+
+- Set `OPENAI_BASE_URL` to your OpenAI compatible server
+
+- Specify the model using `--eastworld.llm_model`
+
+The Validator utilizes LLMs to generate text environmental perception from structured ground truth. Models with higher tokens/second throughput (e.g., Mistral-Small-3.1, Llama-3.1-8B) are preferred.
+
+
+##### Validating on mainnet:
 
 ```
 python neurons/validator.py --netuid 94 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --neuron.axon_off --wandb.off --neuron.num_concurrent_forwards 8 --eastworld.endpoint_url="https://mainnet.eastworld.ai"

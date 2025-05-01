@@ -4,7 +4,7 @@
 
 ## System Requirements
 
-* OpenAI or other LLM service providers, or local vLLM/sglang deployment.
+* OpenAI or other LLM service providers, or local vLLM/SGLang deployment.
 * Recommended for developing your own advanced miners:
     - A memory layer storage solution like [Chroma DB](https://www.trychroma.com/).
     - Suitable tools like [Langchain](https://www.langchain.com/langchain) to build a stronger "AI OS". To survive in Eastworld and achieve a high score, using good models and prompting techniques alone is not enough.
@@ -69,6 +69,14 @@ python neurons/miner.py --subtensor.network test --netuid 288 --wallet.name YOUR
 ```
 Ensure the external endpoint is accessible by the validators and that there are no error logs. Soon, you will start receiving synapses.
 
+##### Running with vLLM or SGLang
+
+When deploying with local vLLM or SGLang:
+
+- Set `OPENAI_BASE_URL` to your OpenAI compatible server
+
+- Specify the model using `--eastworld.llm_model`
+
 
 #### 5. Next
 
@@ -122,7 +130,7 @@ The scoring framework is currently being refined through iterative optimization.
 
 ### Score Formula
 
-$\text{Weighted Score} = 0.4 \times \text{Action Score} + 0.6 \times \text{Quest Score}$
+$\text{Weighted Score} = 0.3 \times \text{Action Score} + 0.7 \times \text{Quest Score}$
 
 
 ### Score Decay
