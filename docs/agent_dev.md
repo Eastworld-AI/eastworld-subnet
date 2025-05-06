@@ -73,6 +73,20 @@ Quests advance through conversation (`talk_to`), not separate commands. This des
 
 The `JuniorAgent` is a naive implementation of the ReAct paradigm and an ephemeral memory system.
 
+
+### Reasoning Agent
+
+Usually, the response time of a reasoning model is too long to fit within the 20-second timeout of validator requests. `ReasoningAgent` adopts an asynchronous reflection architecture that effectively avoids timeouts while retaining the full capabilities of reasoning models. It is still a basic agent following the ReAct paradigm, but thanks to the reasoning models, it demonstrates enhanced cognitive efficacy without introducing a complicated workflow.
+
+Here are a few **IMPORTANT** things to note:
+
+- The miner is runnable but intended as a reference or demo. You are encouraged to develop your own.
+
+- There is no unified interface for reasoning model providers; you need to modify the code according to the model you use. `ReasoningAgent` is built on OpenAI's API.
+
+- Reasoning models are much more expensive. Please calculate the cost and usage before deploying online.
+
+
 ### Senior Agent
 
 The `SeniorAgent` provides a modular framework for architecting general-purpose AI agents with integrated navigation and cognitive capabilities.

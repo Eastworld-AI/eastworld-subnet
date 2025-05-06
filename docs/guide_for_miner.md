@@ -18,6 +18,7 @@ This project currently provides two demonstration miners. You can run them on th
 
 - Wander Miner: `neurons.miner.WanderAgent` moves in a random direction based on LiDAR signal weights.
 - Junior Miner: `eastworld.miner.junior.JuniorAgent` is a basic ReAct agent that explores Eastworld. With a text/log-based memory system, it can handle resource collection and quest submission tasks.
+- Miner with Reasoning Models: `eastworld.miner.reasoning.ReasoningAgent` implements an asynchronous reflection architecture, effectively avoiding 20s timeout in the validation requests while leveraging the capabilities of reasoning models.
 - Senior Miner: `eastworld.miner.senior.SeniorAgent` provides a modular framework combining SLAM navigation and cognitive agent architecture. Built on LangGraph, it supports flexible structure expansion and on-demand function modularity through its graph-based orchestration layer.
 
 Read the [Agent Reference](agent_dev.md) to learn more.
@@ -59,7 +60,8 @@ btcli subnets register --network test --netuid 288
 
 ```
 # Don't forget to set your LLM credential
-# export OPENAI_API_KEY=
+# export OPENAI_BASE_URL= OPENAI_API_KEY=
+# or put them in the .env file
 
 # Activate the virtual environment
 source .venv/bin/activate

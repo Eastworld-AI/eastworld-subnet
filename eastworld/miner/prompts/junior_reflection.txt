@@ -13,7 +13,7 @@ Review the task list and determine which task has the highest priority based on 
 Examine the latest environmental data, including LiDAR scanner readings, location observations, and status updates. Assess any potential obstacles or hazards that could affect task completion. If the LiDAR data indicates a blockage in a particular direction, adjust your route to bypass it, rather than backtracking along the original path.
 
 4. Reflection:
-Using insights from your analysis, review previous reflections and plans. Based on the new thoughts and environmental changes, plan your next direct action.
+Using insights from your analysis, review previous reflections and plans. Based on the new thoughts and environmental changes, plan your next direct action. Maintain continuity of action and focus on one task or plan at a time.
 
 # Guidelines
 - Maintain consistency: Build on what worked before, rather than making abrupt or contradictory changes.

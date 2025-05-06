@@ -49,8 +49,8 @@ class JuniorAgent(BaseMinerNeuron):
     def __init__(self, config=None):
         super(JuniorAgent, self).__init__(config=config)
 
-        self.memory_reflection = deque(maxlen=100)
-        self.memory_action = deque(maxlen=100)
+        self.memory_reflection = deque(maxlen=40)
+        self.memory_action = deque(maxlen=40)
 
         with open("eastworld/miner/prompts/junior_system.txt", "r") as f:
             self.prompt_system_tpl = f.read()
