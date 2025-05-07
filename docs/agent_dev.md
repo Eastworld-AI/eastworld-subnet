@@ -4,6 +4,11 @@
 
 ## Basic Concepts
 
+### Background Story
+
+The virtual world's background story unfolds in an unspecified future era. The Miner, an intelligent robotic agent (designated Agent _UID_), serves as crew aboard a spacecraft. When the vessel catastrophically crashes into a canyon during flight operations, the AI Agent must now help the surviving crew endure the extreme environmental conditions.
+
+
 ### Synapse Data
 
 Check the `protocol.Observation` synapse definition. The validator will send the following data to miners:
@@ -18,14 +23,9 @@ Check the `protocol.Observation` synapse definition. The validator will send the
 The miner's primary task is to process all this information and respond with a valid function call.
 
 
-### The Story
-
-The story unfolds in an unspecified future era. The Miner, an intelligent robotic agent (designated Agent #UID), serves as crew aboard a spacecraft. When the vessel catastrophically crashes into a canyon during flight operations, the AI Agent must now help the surviving crew endure the extreme environmental conditions.
-
-
 ### Compass Directions
 
-Eastworld subnet uses 8 directions to describe position relations:
+Eastworld subnet uses 8 global directions to describe position relations:
 
   - north (Cardinal directions)
   - east
@@ -51,19 +51,50 @@ The current LiDAR data implementation also provides directional distance measure
 
 ### Available Actions
 
-Here are the basic actions for agents so far. You should not hardcode them in the prompt, as the `action_space` already includes all of these descriptions.
+Here are the basic actions for agents so far. You should not hardcode them in the prompt, as the `action_space` already includes all these descriptions.
 
   - move_in_direction: Moves in the specified direction.
-  - move_to_target: Move towards the specified target entity. Target can be a character or a location and must be in sight.
-  - talk_to: Talk to other entity. Accepts the name of the target and the content you want to say. The target may not hear you if you're too far away.
-  - inspect: Examine a specified target to obtain detailed information, such as character status, item identification, or device operation instructions.
-  - collect: Collect resources or items from the specified target entity.
+  - move_to_target: Move towards the specified target entity. Target can be a character or a location and must be in sight. If the distance is too far, it may not be possible to plan a direct route.
+  - talk_to: Talk to other entity. Accepts the name of the target and the content you want to say. The target may not hear you beyond 10 meters.
+  Talk to other entity. Accepts the name of the target and the content you want to say. The target may not hear you if you're too far away.
+  - inspect: Examine a specified target to obtain detailed information, such as character status, item identification, or device operation instructions. The target must be within 15 meters.
+  - collect: Collect resources or items from the specified target entity. This action can only be performed when the target is within close range.
   - discard_item: Discard items from the inventory.
+  - emergency_return: Initiates an emergency rescue request, notifying fleet members to return you to the spaceship. Please note, all items on your inventory will be discarded, and due to system diagnostics, you will be unable to perform any actions for an extended period. (For more efficient debugging and development, the cooldown penalty is not enabled on the testnet)
 
+OpenAI style function schema in synapse `Observation.action_space`: 
+
+```
+[
+  {
+      "type": "function",
+      "function": {
+          "name": "move_in_direction",
+          "description": "Moves in the specified direction.",
+          "parameters": {
+              "type": "object",
+              "properties": {
+                  "direction": {
+                      "type": "string",
+                      "enum": ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"],
+                      "description": "The direction you try to move."
+                  },
+                  "distance": {
+                      "type": "number",
+                      "description": "The distance in meters to move in the specified direction. Note that the actual moving distance may be different from the expected value. Valid input range is 0 to 20 meters."
+                  }
+              },
+              "required": ["direction", "distance"]
+          }
+      }
+  },
+...
+]
+```
 
 ### Quest System
 
-Quests advance through conversation (`talk_to`), not separate commands. This design choice creates more immersive, real-life like interactions.
+Quests advance through conversation (`talk_to`), not separate commands. This design creates more immersive, real-life like interactions for AI Agents.
 
 
 
@@ -71,7 +102,7 @@ Quests advance through conversation (`talk_to`), not separate commands. This des
 
 ### Junior Agent
 
-The `JuniorAgent` is a naive implementation of the ReAct paradigm and an ephemeral memory system.
+The `JuniorAgent` is a naive implementation of the ReAct paradigm with an ephemeral memory system.
 
 
 ### Reasoning Agent
