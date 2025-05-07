@@ -41,5 +41,5 @@ Environment Perception:
 Inventory:
 {items}
 
-Previous Action:
-{previous_action}
+Recent Action:
+{recent_action}

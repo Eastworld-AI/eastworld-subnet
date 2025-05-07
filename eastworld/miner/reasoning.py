@@ -205,18 +205,27 @@ class ReasoningAgent(BaseMinerNeuron):
         odometry = f"  - {', '.join(synapse.sensor.odometry)}\n"
         perception = synapse.perception.environment + "\n" + synapse.perception.objects
 
-        items = ""
-        for item in synapse.items:
-            items += f"  - {item.name}, Amount {item.count}, Description: {item.description.strip()}\n"
-
-        previous_action = ""
-        if len(self.memory_action):
-            last_action = self.memory_action[-1]
-            previous_action = (
-                f"  Action: {last_action.action}\n  Result: {last_action.feedback}"
+        if len(synapse.items):
+            items = "\n".join(
+                [
+                    f"  - {x.name}, Amount {x.count}, Description: {x.description.strip()}"
+                    for x in synapse.items
+                ]
             )
         else:
-            previous_action = "  Action: N/A\n  Result: N/A"
+            items = "EMPTY"
+
+        recent_action = ""
+        for idx, l in enumerate(list(self.memory_action)[-5:]):
+            l: ActionLog
+            repeat_str = (
+                f" (repeated {l.repeat_times} times)" if l.repeat_times > 1 else ""
+            )
+            recent_action += f"""
+  - Log {idx + 1}
+    Action: {l.action} {repeat_str}
+    Result: {l.feedback}
+"""
 
         llm_client = AsyncOpenAI(http_client=self.http_client)
         try:
@@ -226,16 +235,20 @@ class ReasoningAgent(BaseMinerNeuron):
                 "odometry": odometry,
                 "perception": perception,
                 "items": items,
-                "previous_action": previous_action,
+                "recent_action": recent_action,
             }
             messages = [
+                {
+                    "role": "system",
+                    "content": self.prompt_system_tpl.format(),
+                },
                 {
                     "role": "user",
                     "content": self.prompt_action_tpl.format(**action_context),
                 },
             ]
             action_space = [action_standby, *synapse.action_space]
-            bt.logging.trace(messages[0]["content"], ">>>> Action Prompt")
+            bt.logging.debug(messages[1]["content"], ">>>> Action Prompt")
             # bt.logging.trace(action_space, ">>>> Action Space")
             response = await llm_client.chat.completions.create(
                 model=self.action_model,
@@ -298,9 +311,15 @@ class ReasoningAgent(BaseMinerNeuron):
         odometry = "\n".join([f"  - {', '.join(ob.sensor.odometry)}" for ob in obs])
         perception = obs[-1].perception.environment + "\n" + obs[-1].perception.objects
 
-        items = ""
-        for item in obs[-1].items:
-            items += f"  - {item.name}, Amount {item.count}, Description: {item.description.strip()}\n"
+        if len(obs[-1].items):
+            items = "\n".join(
+                [
+                    f"  - {x.name}, Amount {x.count}, Description: {x.description.strip()}"
+                    for x in obs[-1].items
+                ]
+            )
+        else:
+            items = "EMPTY"
 
         action_space = ""
         for act in obs[-1].action_space:
@@ -342,7 +361,7 @@ class ReasoningAgent(BaseMinerNeuron):
                     "content": self.prompt_reflection_tpl.format(**reflection_context),
                 },
             ]
-            bt.logging.trace(messages[0]["content"], ">>>> Reflection Prompt")
+            bt.logging.debug(messages[0]["content"], ">>>> Reflection Prompt")
 
             t1 = time.time()
             # Notice we're using responses api here, instead of chat completions.
