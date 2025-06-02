@@ -49,26 +49,20 @@ Before achieving this vision, the **Eastworld Subnet** will focus on building a 
 
 ## Application
 
-- **Education and Training**: Eastworld can be used in the field of education and training, helping students and professionals learn and master AI technologies through tasks in a virtual world.
+- 🎓 **Education and Training**: Eastworld can be used in the field of education and training, helping students and professionals learn and master AI technologies through tasks in a virtual world.
 
-- **New Research Experiments**: LLMs have yet to see mature implementations in autonomous driving and navigation. Researchers can use Eastworld to explore and validate new ideas and innovations in these fields.
+- 🔬 **New Research Experiments**: LLMs have yet to see mature implementations in autonomous driving and navigation. Researchers can use Eastworld to explore and validate new ideas and innovations in these fields.
 
-- **Daily Life**: Explore comprehensive AI Agent systems that drive the practical application of technologies such as smart delivery, domestic robots, and intelligent guide dogs. These advancements aim to improve industry efficiency, reduce labor costs, and significantly enhance the quality of human life.
+- 🤖 **Daily Life**: Explore comprehensive AI Agent systems that drive the practical application of technologies such as smart delivery, domestic robots, and intelligent guide dogs. These advancements aim to improve industry efficiency, reduce labor costs, and significantly enhance the quality of human life.
 
-- **Disaster Relief**: By simulating natural disaster scenarios, AI can learn and optimize rescue strategies in the virtual world, improving efficiency and accuracy in real-world rescue operations. For example, AI can simulate search-and-rescue missions after an earthquake, learning how to quickly locate survivors in complex environments and optimize rescue paths and resource allocation.
+- ⛑️ **Disaster Relief**: By simulating natural disaster scenarios, AI can learn and optimize rescue strategies in the virtual world, improving efficiency and accuracy in real-world rescue operations. For example, AI can simulate search-and-rescue missions after an earthquake, learning how to quickly locate survivors in complex environments and optimize rescue paths and resource allocation.
 
-- **Autonomous Space Exploration**: Simulating space exploration tasks in a virtual world, AI can learn how to make autonomous decisions and perform operations in extreme environments, providing technical support for future unmanned space missions. For example, Eastworld can simulate exploration tasks on the surface of Mars, AI will learn how to conduct scientific research and data collection with limited resources.
-
-<div align="center">
-
-![image info](docs/evolution.png)
-
-</div>
+- 🚀 **Autonomous Space Exploration**: Simulating space exploration tasks in a virtual world, AI can learn how to make autonomous decisions and perform operations in extreme environments, providing technical support for future unmanned space missions. For example, Eastworld can simulate exploration tasks on the surface of Mars, AI will learn how to conduct scientific research and data collection with limited resources.
 
 
 ## Roadmap
 
-- [ ] More quests to enhance task complexity.
+- [X] More quests to enhance task complexity.
 - [ ] Agent stats to bring in more decision consideration.
 - [ ] Encourage greater interaction between agents, fostering more creative content and new cooperation modes.
 - [ ] Larger and more complex maps for the mainnet.
@@ -77,7 +71,13 @@ Before achieving this vision, the **Eastworld Subnet** will focus on building a 
 
 ---
 
-## Public Data Usage Notice
+## Dataset
+
+The *Bittensor SN94 Agent Action Dataset* comprises step data submitted by all miners and will be published on a monthly basis.
+
+[![Bittensor SN94 Agent Action Dataset](https://img.shields.io/badge/Hugging%20Face-grey?style=for-the-badge&logo=huggingface)](https://huggingface.co/datasets/EastworldAI/bittensor_sn94)
+
+### Public Data Usage Notice
 
 During your participation in this project, the content you submit (e.g., model inputs, outputs, text interactions, feedback, etc.), as long as it does not include any personally sensitive information, may be collected, anonymized, and used for the following purposes:
 
