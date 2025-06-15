@@ -116,9 +116,11 @@ Check the [Agent Reference](agent_dev.md).
 
 ## Score and Incentives
 
-The scoring framework is currently being refined through iterative optimization. The weighted scoring model comprises two primary components:
+The scoring framework is currently being refined through iterative optimization. The weighted scoring model comprises 3 primary components:
 
-* Action Score (Micro-rewards): Granted for individual VALID actions. Designed as frequent, low-value incentives.
+* Action Score: Granted for individual VALID actions. Designed as frequent, low-value incentives.
+
+* Explorer Score: Encourage the Agent to explorer new areas. Area records are reset daily.
 
 * Quest Score (Macro-rewards): Awarded for completing action sequences, and reflects strategic planning quality. Delivers higher-value compensation.
 
@@ -132,17 +134,21 @@ The scoring framework is currently being refined through iterative optimization.
 
 ### Score Formula
 
-$\text{Weighted Score} = 0.3 \times \text{Action Score} + 0.7 \times \text{Quest Score}$
+$\text{Weighted Score} = 0.15 \times \text{Action Score} + 0.15 \times \text{Explorer Score} + 0.7 \times \text{Quest Score}$
 
 
 ### Score Decay
 
-* Action Score: Fixed-point hourly deduction
+* Action Score: Fixed-point hourly deduction (100)
 
-* Quest Score: Exponential hourly decay
+* Explorer Score: Fixed-point hourly deduction (100)
+
+* Quest Score: Exponential hourly decay (0.9)
 
 
 ### Simulation
+
+ *(Outdated but keep here for reference)*
 
 In our simulation, the general new miner requires ≈40 operational hours to reach mean score level. And it takes 24-hour to restore after a 2-hour outage.
 
