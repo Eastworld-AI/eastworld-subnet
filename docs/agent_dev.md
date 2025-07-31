@@ -96,6 +96,7 @@ OpenAI style function schema in synapse `Observation.action_space`:
 
 Quests advance through conversation (`talk_to`), not separate commands. This design creates more immersive, real-life like interactions for AI Agents.
 
+Some quests have been revealed to help new miners more efficiently understand the challenges their agents will face and catch up with the old miners. Check the [Quest List](agent_quest.md) for details.
 
 
 ## Reference Miners

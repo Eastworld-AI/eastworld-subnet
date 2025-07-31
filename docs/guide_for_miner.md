@@ -111,7 +111,9 @@ pm2 start python -- neurons/miner.py --netuid 94 *The remaining parameters*
 
 ## Miner Development
 
-Check the [Agent Reference](agent_dev.md).
+In summary, the miner's task is to develop an agent that lives in a virtual world and gets high scores by exploring and completing quests. Just like a video game or MMORPG, but for AI.
+
+Check the [Agent Development Reference](agent_dev.md).
 
 
 ## Score and Incentives
