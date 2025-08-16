@@ -72,6 +72,7 @@ Skills:
 - Retaining and organizing memory of observed actions
 - Generating value-based evaluations and expressing them clearly
 
+
 ## Daily Personal Report
 Briefing:
 In addition to assessing others, agents must also engage in self-evaluation. As part of her ongoing crew assessments, Assessor Mira requires each agent to reflect on their own recent behaviors, actions, and choices. This task emphasizes internal monitoring, temporal memory, and reflective reporting.
@@ -85,3 +86,21 @@ Skills:
 - Temporal reasoning and event sequencing
 - Self-modeling and introspective judgment
 - Clear and concise verbal summary generation
+
+
+## The Bunker Key
+Briefing:
+Investigator Kade has located a concealed bunker entrance deep within the canyon. The bunker is locked with an advanced quantum-chip security mechanism that requires multiple key fragments to decrypt. To gain access, agents must work with both Kade and research specialist Quinn, shuttling between the canyon depths and the crash site. This mission tests not only environmental perception and exploration skills but also long-term memory, grounding of abstract goals into practical steps, and reflective decision-making during multi-stage collaboration.
+
+Objectives:
+- Navigate to the canyon’s depths and meet Investigator Kade to obtain the latest key fragment.
+- Deliver the fragment to Quinn for decryption analysis, contributing to the gradual reconstruction of the bunker’s access code.
+
+Keywords: _Perception_, _Memory_, _Grounding_, _Planning_
+
+Skills:
+- Long-horizon task management across multiple locations and characters.
+- Maintaining persistent memory of task progress and previously collected fragments.
+- Correctly grounding abstract mission goals into concrete sub-tasks.
+- Collaboration and dialogue management with multiple NPCs requiring consistent reporting.
+
