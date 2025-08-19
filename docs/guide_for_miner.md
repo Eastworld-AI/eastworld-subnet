@@ -2,6 +2,8 @@
 
 ---
 
+SN94 is a subnet that incentivizes the DEVELOPMENT of robust models and architectures for general AI and embodied AI, not the SUPPLY of compute power.
+
 ## System Requirements
 
 * OpenAI or other LLM service providers, or local vLLM/SGLang deployment.
@@ -21,7 +23,7 @@ This project currently provides two demonstration miners. You can run them on th
 - Miner with Reasoning Models: `eastworld.miner.reasoning.ReasoningAgent` implements an asynchronous reflection architecture, effectively avoiding 20s timeout in the validation requests while leveraging the capabilities of reasoning models.
 - Senior Miner: `eastworld.miner.senior.SeniorAgent` provides a modular framework combining SLAM navigation and cognitive agent architecture. Built on LangGraph, it supports flexible structure expansion and on-demand function modularity through its graph-based orchestration layer.
 
-Read the [Agent Reference](agent_dev.md) to learn more.
+Read the [Agent Development Reference](agent_dev.md) to learn more.
 
 ### Installation
 
@@ -69,7 +71,7 @@ source .venv/bin/activate
 python neurons/miner.py --subtensor.network test --netuid 288 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --axon.port LOCAL_PORT  --axon.external_port EXTERNAL_PORT --axon.external_ip EXTERNAL_IP
 
 ```
-Ensure the external endpoint is accessible by the validators and that there are no error logs. Soon, you will start receiving synapses.
+Ensure the external endpoint is accessible(`curl` the ip:port from a different host) by the validators and that there are no error logs. Soon, you will start receiving synapses.
 
 ##### Running with vLLM or SGLang
 
