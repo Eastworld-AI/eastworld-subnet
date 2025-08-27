@@ -1,11 +1,11 @@
 [project]
 name = "eastworld-subnet"
 version = "0.1.0"
-description = "Add your description here"
+description = "Next-Generation Gyms for Embodied AI Agents, on Bittensor"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "bittensor>=9.8.3",
+    "bittensor>=9.9.0",
     "dotenv>=0.9.9",
     "httpx[http2]>=0.28.1",
     "json-repair>=0.35.0",

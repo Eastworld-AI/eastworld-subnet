@@ -8,12 +8,12 @@ aiosignal==1.4.0
     # via aiohttp
 annotated-types==0.7.0
     # via pydantic
-anyio==4.9.0
+anyio==4.10.0
     # via
     #   httpx
     #   openai
     #   starlette
-async-substrate-interface==1.4.3
+async-substrate-interface==1.5.1
     # via bittensor
 asyncstdlib==3.13.1
     # via bittensor
@@ -21,20 +21,20 @@ attrs==25.3.0
     # via aiohttp
 base58==2.1.1
     # via scalecodec
-bittensor==9.8.3
+bittensor==9.9.0
     # via eastworld-subnet (pyproject.toml)
-bittensor-drand==0.5.1
+bittensor-drand==1.0.0
     # via bittensor
-bittensor-wallet==3.1.0
+bittensor-wallet==4.0.0
     # via bittensor
 bt-decode==0.6.0
     # via async-substrate-interface
-certifi==2025.7.14
+certifi==2025.8.3
     # via
     #   httpcore
     #   httpx
     #   requests
-charset-normalizer==3.4.2
+charset-normalizer==3.4.3
     # via requests
 click==8.2.1
     # via uvicorn
@@ -56,7 +56,7 @@ h11==0.16.0
     # via
     #   httpcore
     #   uvicorn
-h2==4.2.0
+h2==4.3.0
     # via httpx
 hpack==4.1.0
     # via h2
@@ -76,7 +76,7 @@ idna==3.10
     #   yarl
 jiter==0.10.0
     # via openai
-json-repair==0.48.0
+json-repair==0.50.0
     # via eastworld-subnet (pyproject.toml)
 more-itertools==10.7.0
     # via scalecodec
@@ -84,7 +84,7 @@ msgpack==1.1.1
     # via msgpack-numpy-opentensor
 msgpack-numpy-opentensor==0.5.0
     # via bittensor
-multidict==6.6.3
+multidict==6.6.4
     # via
     #   aiohttp
     #   yarl
@@ -98,7 +98,7 @@ numpy==2.3.2
     # via
     #   bittensor
     #   msgpack-numpy-opentensor
-openai==1.98.0
+openai==1.102.0
     # via eastworld-subnet (pyproject.toml)
 packaging==25.0
     # via bittensor
@@ -126,7 +126,7 @@ python-statemachine==2.5.0
     # via bittensor
 pyyaml==6.0.2
     # via bittensor
-requests==2.32.4
+requests==2.32.5
     # via
     #   bittensor
     #   scalecodec
@@ -150,7 +150,7 @@ toml==0.10.0
     # via bt-decode
 tqdm==4.67.1
     # via openai
-typing-extensions==4.14.1
+typing-extensions==4.15.0
     # via
     #   aiosignal
     #   anyio

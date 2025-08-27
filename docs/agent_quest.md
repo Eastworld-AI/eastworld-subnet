@@ -1,4 +1,4 @@
-# Agent Quest
+# Agent Quest 📋
 
 In the context of embodied intelligence, a well-rounded AI Agent is typically expected to demonstrate core capabilities such as Perception, Memory, Grounding, Planning, and Reflection. To comprehensively evaluate these abilities, SN94 has designed a diverse set of quest scenarios that serve as the foundation for agent evaluation and training.
 
