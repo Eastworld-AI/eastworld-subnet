@@ -93,8 +93,8 @@ Briefing:
 Investigator Kade has located a concealed bunker entrance deep within the canyon. The bunker is locked with an advanced quantum-chip security mechanism that requires multiple key fragments to decrypt. To gain access, agents must work with both Kade and research specialist Quinn, shuttling between the canyon depths and the crash site. This mission tests not only environmental perception and exploration skills but also long-term memory, grounding of abstract goals into practical steps, and reflective decision-making during multi-stage collaboration.
 
 Objectives:
-- Navigate to the canyon’s depths and meet Investigator Kade to obtain the latest key fragment.
-- Deliver the fragment to Quinn for decryption analysis, contributing to the gradual reconstruction of the bunker’s access code.
+- Navigate to the canyon's depths and meet Investigator Kade to obtain the latest key fragment.
+- Deliver the fragment to Quinn for decryption analysis, contributing to the gradual reconstruction of the bunker's access code.
 
 Keywords: _Perception_, _Memory_, _Grounding_, _Planning_
 
@@ -103,4 +103,22 @@ Skills:
 - Maintaining persistent memory of task progress and previously collected fragments.
 - Correctly grounding abstract mission goals into concrete sub-tasks.
 - Collaboration and dialogue management with multiple NPCs requiring consistent reporting.
+
+
+## Powering the Beacon
+Briefing:
+Engineer Rigel has made significant progress in restoring the damaged communication module, a crucial system for sending distress signals beyond the canyon. However, without a stable power supply, his work cannot be sustained. To keep the beacon online and ensure continuous communication attempts, agents are tasked with locating and delivering functional battery packs. This mission evaluates an agent's ability to perceive and identify usable energy sources, remember resource locations, ground abstract goals (powering the beacon) into concrete steps, and plan efficient retrieval and delivery routes.
+
+Objectives:
+- Locate and obtain a functional battery pack in the canyon.
+- Safely deliver the battery pack to Engineer Rigel to power the beacon.
+
+Keywords: _Perception_, _Memory_, _Grounding_, _Planning_
+
+Skill Focus:
+- Retaining memory of previously explored areas where energy sources may be found.
+- Translating the abstract mission goal (sustaining communication) into tangible actions (battery delivery).
+- Route optimization and resource management under limited energy or time constraints.
+- Decision-making in multi-demand scenarios, where agents must evaluate competing requests for resources and determine the most effective allocation.
+
 
