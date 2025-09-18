@@ -53,7 +53,13 @@ class Validator(BaseValidatorNeuron):
 
         self.http_client = httpx.AsyncClient()
         self.inactive_miners = {}
-        self.last_update_scores_step = 0
+
+    async def concurrent_forward(self):
+        coroutines = [
+            self.forward() for _ in range(self.config.neuron.num_concurrent_forwards)
+        ]
+        await asyncio.gather(*coroutines)
+        await self.fetch_and_update_scores()
 
     async def forward(self):
         """
@@ -68,6 +74,11 @@ class Validator(BaseValidatorNeuron):
         try:
             # Call Eastworld API to get miner's state and observation.
             res = await self.get_observation()
+
+            if not res:
+                bt.logging.error("No response from Eastworld API.")
+                await asyncio.sleep(30)
+                return
 
             if res.code == 429:
                 bt.logging.info("The next turn is not available yet. Wait for 15s.")
@@ -105,8 +116,12 @@ class Validator(BaseValidatorNeuron):
                     bt.logging.info(f"Skip for inactive miner #{res.uid}.")
                     return
 
+            if not res.context:
+                bt.logging.error(f"No context from Eastworld API.")
+                return
+
             axon = self.metagraph.axons[res.uid]
-            bt.logging.info(f"Selected miners: {res.uid} {axon.ip}:{axon.port}")
+            bt.logging.info(f"Selected miner UID {res.uid} AXON {axon.ip}:{axon.port}")
             miner_uids = np.array([res.uid])
             synapse = await self.create_synapse(res.context)
 
@@ -123,7 +138,7 @@ class Validator(BaseValidatorNeuron):
             # Log the results for monitoring purposes.
             bt.logging.trace(f"Received responses: {responses}")
 
-            synapse: bt.Synapse = responses[0]
+            synapse: Observation = responses[0]
             # Add skip time for inactive miners.
             if self.config.subtensor.network in ("test", "local"):
                 if synapse.is_failure or not len(synapse.action):
@@ -146,7 +161,6 @@ class Validator(BaseValidatorNeuron):
                 return
 
             await self.submit_action(res.turns, res.uid, synapse)
-            await self.fetch_and_update_scores()
         except httpx.ConnectError as e:
             # Eastworld server is down. Retry after 60 seconds.
             bt.logging.error(
@@ -305,12 +319,6 @@ class Validator(BaseValidatorNeuron):
 
     async def fetch_and_update_scores(self):
         """Fetch latest miners' scores from Eastworld server"""
-        # Update scores every 30 steps.
-        if self.step - self.last_update_scores_step < 30:
-            return
-        # `step` is numpy.ndarray. Make sure to convert to int.
-        self.last_update_scores_step = int(self.step)
-
         endpoint_url = urlparse(self.config.eastworld.endpoint_url)
         endpoint = f"{endpoint_url.scheme}://{endpoint_url.netloc}/sn/score"
 

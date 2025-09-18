@@ -58,7 +58,7 @@ class EWContext(BaseModel):
 class EWApiResponse(BaseModel):
     code: int
     message: str
-    turns: int | None = None
-    uid: int | None = None
-    key: str | None = None
+    turns: int
+    uid: int
+    key: str
     context: EWContext | None = None

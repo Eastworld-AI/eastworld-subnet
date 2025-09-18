@@ -23,6 +23,7 @@ import asyncio
 import argparse
 import threading
 import time
+from abc import abstractmethod
 from typing import List, Union
 from traceback import print_exception
 
@@ -107,11 +108,8 @@ class BaseValidatorNeuron(BaseNeuron):
             bt.logging.error(f"Failed to create Axon initialize with exception: {e}")
             pass
 
-    async def concurrent_forward(self):
-        coroutines = [
-            self.forward() for _ in range(self.config.neuron.num_concurrent_forwards)
-        ]
-        await asyncio.gather(*coroutines)
+    @abstractmethod
+    async def concurrent_forward(self): ...
 
     def run(self):
         """
@@ -194,7 +192,8 @@ class BaseValidatorNeuron(BaseNeuron):
         if self.is_running:
             bt.logging.debug("Stopping validator in background thread.")
             self.should_exit = True
-            self.thread.join(5)
+            if self.thread:
+                self.thread.join(5)
             self.is_running = False
             bt.logging.debug("Stopped")
 
