@@ -42,7 +42,7 @@ class WanderAgent(BaseMinerNeuron):
     def __init__(self, config=None):
         super(WanderAgent, self).__init__(config=config)
 
-    async def forward(self, synapse: Observation) -> Observation:
+    async def forward(self, synapse: Observation) -> Observation:  # type: ignore
         """
         Processes the incoming 'Observation' synapse by performing a predefined operation on the input data.
         This method should be replaced with actual logic relevant to the miner's purpose.
@@ -78,9 +78,12 @@ class WanderAgent(BaseMinerNeuron):
             "west",
             "northwest",
         ]
-        weights = [1] * len(directions)
+        weights = [1.0] * len(directions)
 
         try:
+            if synapse.sensor is None:
+                return random.choice(directions)
+
             readings = {}
             for data in synapse.sensor.lidar:
                 readings[data[0]] = float(data[1].split("m")[0]) - 5.0

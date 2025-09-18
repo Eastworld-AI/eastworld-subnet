@@ -263,7 +263,7 @@ def add_validator_args(cls, parser):
         "--eastworld.llm_model",
         type=str,
         help="The model to use for the LLM calls.",
-        default="gpt-4o-mini",
+        default="gpt-5-nano",
     )
 
 

@@ -243,57 +243,52 @@ class Validator(BaseValidatorNeuron):
         )
 
         # Summarize perception with LLM
-        environment_prompt = ""
-        if any((ob.terrain, ob.weather, ob.location)):
-            environment_context = {
-                "terrain": "\n".join([f"- {', '.join(x)}" for x in ob.terrain])
-                or "N/A",
-                "weather": "\n".join([f"- {', '.join(x)}" for x in ob.weather])
-                or "N/A",
-                "location": "\n".join([f"- {', '.join(x)}" for x in ob.location])
-                or "N/A",
-            }
-            with open("eastworld/validator/prompts/environment.txt", "r") as f:
-                prompt_tpl = f.read()
-                environment_prompt = prompt_tpl.format(**environment_context)
-
-        objects_prompt = ""
-        if any((ob.structure, ob.static, ob.dynamic)):
-            objects_context = {
+        perception_prompt = ""
+        with open("eastworld/validator/prompts/perception.txt", "r") as f:
+            prompt_tpl = f.read()
+            perception_context = {
+                "terrain": "\n".join([f"    - {', '.join(x)}" for x in ob.terrain])
+                or "    N/A",
+                "weather": "\n".join([f"    - {', '.join(x)}" for x in ob.weather])
+                or "    N/A",
+                "location": "\n".join([f"    - {', '.join(x)}" for x in ob.location])
+                or "    N/A",
                 "structure": "\n".join(
-                    [f"- {', '.join(x[:-1])}\n{x[-1]}" for x in ob.structure]
+                    [f"    - {', '.join(x[:-1])}\n{x[-1]}" for x in ob.structure]
                 )
-                or "N/A",
-                "static": "\n".join(
-                    [f"- {', '.join(x[:-1])}\n{x[-1]}" for x in ob.static]
+                or "    N/A",
+                "static_object": "\n".join(
+                    [f"    - {', '.join(x[:-1])}\n{x[-1]}" for x in ob.static]
                 )
-                or "N/A",
-                "dynamic": "\n".join(
-                    [f"- {', '.join(x[:-1])}\n{x[-1]}" for x in ob.dynamic]
+                or "    N/A",
+                "dynamic_object": "\n".join(
+                    [f"    - {', '.join(x[:-1])}\n{x[-1]}" for x in ob.dynamic]
                 )
-                or "N/A",
+                or "    N/A",
             }
-            with open("eastworld/validator/prompts/objects.txt", "r") as f:
-                prompt_tpl = f.read()
-                objects_prompt = prompt_tpl.format(**objects_context)
+            perception_prompt = prompt_tpl.format(**perception_context)
 
         async def get_llm_response(prompt):
             if not prompt:
                 return ""
             async with httpx.AsyncClient() as client:
                 llm = AsyncOpenAI(http_client=client, timeout=10)
+                model = self.config.eastworld.llm_model
+                reasoning_effort = "low" if model.startswith("gpt-5") else None
                 response = await llm.chat.completions.create(
-                    model=self.config.eastworld.llm_model,
-                    reasoning_effort="none",
+                    model=model,
+                    reasoning_effort=reasoning_effort,
                     messages=[{"role": "user", "content": prompt}],
                 )
-                content = response.choices[0].message.content.strip()
+                content = ""
+                if response.choices[0].message.content:
+                    content = response.choices[0].message.content.strip()
                 bt.logging.trace(f"LLM response in perception: \n{content}")
                 return content
 
-        environment_content, objects_content = await asyncio.gather(
-            get_llm_response(environment_prompt),
-            get_llm_response(objects_prompt),
+        perception_content = await get_llm_response(perception_prompt)
+        environment_content, objects_content = self._parse_perception_content(
+            perception_content
         )
 
         # Update perception with LLM response
@@ -316,6 +311,37 @@ class Validator(BaseValidatorNeuron):
             reward=context.reward,
         )
         return synapse
+
+    def _parse_perception_content(self, content: str) -> tuple[str, str]:
+        lines = [line.strip() for line in content.splitlines() if line.strip()]
+        header_indices = []
+        for i, line in enumerate(lines):
+            if line.startswith("#"):
+                header_indices.append(i)
+
+        environment_lines = []
+        objects_lines = []
+        if not header_indices and lines:
+            # If no headers are found, assume the first line is environment and the rest are objects.
+            environment_lines = lines[:1]
+            objects_lines = lines[1:]
+        elif len(header_indices) == 1:
+            # If only one header is found, assume it's the start of the objects section.
+            environment_lines = lines[: header_indices[0]]
+            objects_lines = lines[header_indices[0] + 1 :]
+        else:
+            # If two or more headers are found, use the first two to split the content.
+            environment_lines = lines[: header_indices[1]]
+            objects_lines = lines[header_indices[1] + 1 :]
+
+        environment_content = "\n".join(
+            [line for line in environment_lines if not line.startswith("#")]
+        )
+        objects_content = "\n".join(
+            [line for line in objects_lines if not line.startswith("#")]
+        )
+
+        return environment_content, objects_content
 
     async def fetch_and_update_scores(self):
         """Fetch latest miners' scores from Eastworld server"""
