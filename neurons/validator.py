@@ -273,13 +273,14 @@ class Validator(BaseValidatorNeuron):
                 return ""
             async with httpx.AsyncClient() as client:
                 llm = AsyncOpenAI(http_client=client, timeout=10)
-                model = self.config.eastworld.llm_model
-                reasoning_effort = "low" if model.startswith("gpt-5") else None
-                response = await llm.chat.completions.create(
-                    model=model,
-                    reasoning_effort=reasoning_effort,
-                    messages=[{"role": "user", "content": prompt}],
-                )
+                llm_model = self.config.eastworld.llm_model
+                llm_args = {
+                    "model": llm_model,
+                    "messages": [{"role": "user", "content": prompt}],
+                }
+                if llm_model.startswith("gpt-5") or llm_model.startswith("gemini-2.5"):
+                    llm_args["reasoning_effort"] = "low"
+                response = await llm.chat.completions.create(**llm_args)
                 content = ""
                 if response.choices[0].message.content:
                     content = response.choices[0].message.content.strip()
