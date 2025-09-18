@@ -227,7 +227,7 @@ class Validator(BaseValidatorNeuron):
                 f"Failed to submit action ({uid}) to Eastworld server. {r.status_code}"
             )
         ob = r.json()
-        if ob.get("code") != 200:
+        if ob.get("code") != 200 and ob.get("code") != 400:
             raise Exception(
                 f"Failed to submit action ({uid}) to Eastworld server. {ob.get('code')} {ob.get('message')}"
             )
@@ -396,7 +396,7 @@ class Validator(BaseValidatorNeuron):
         # Update local scores.
         # shape: [ metagraph.n ]
         self.scores: np.ndarray = scattered_scores
-        bt.logging.debug(f"Updated scores: {self.scores}")
+        bt.logging.debug(f"Updated scores: \n{self.scores}")
 
 
 # The main function parses the configuration and runs the validator.
