@@ -55,8 +55,8 @@ class Observation(bt.Synapse):
     items: list[Item]
 
     # Environment observations. MUST set default None, Synapse creates dummy instance in the headers.
-    sensor: Sensor = None
-    perception: Perception = None
+    sensor: Sensor | None = None
+    perception: Perception | None = None
 
     # Feedback of last action
     action_log: list[str]

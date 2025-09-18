@@ -51,12 +51,14 @@ class EWContext(BaseModel):
     action: list[dict]
     # Action execution log of last round.
     log: list[str]
+    # Agent's weighted score.
+    reward: float = 0.0
 
 
 class EWApiResponse(BaseModel):
     code: int
     message: str
-    turns: int = None
-    uid: int = None
-    key: str = None
-    context: EWContext = None
+    turns: int | None = None
+    uid: int | None = None
+    key: str | None = None
+    context: EWContext | None = None

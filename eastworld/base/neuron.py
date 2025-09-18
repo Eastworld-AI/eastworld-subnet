@@ -105,6 +105,9 @@ class BaseNeuron(ABC):
         self.step = 0
 
     @abstractmethod
+    def resync_metagraph(self): ...
+
+    @abstractmethod
     async def forward(self, synapse: bt.Synapse) -> bt.Synapse: ...
 
     @abstractmethod
@@ -121,7 +124,7 @@ class BaseNeuron(ABC):
             self.resync_metagraph()
 
         if self.should_set_weights():
-            self.set_weights()
+            self.set_weights()  # type: ignore
             self.last_set_weights_block = self.block
 
         # Always save state.

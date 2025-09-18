@@ -146,7 +146,7 @@ class Validator(BaseValidatorNeuron):
                 return
 
             await self.submit_action(res.turns, res.uid, synapse)
-            await self.update_scores()
+            await self.fetch_and_update_scores()
         except httpx.ConnectError as e:
             # Eastworld server is down. Retry after 60 seconds.
             bt.logging.error(
@@ -270,6 +270,7 @@ class Validator(BaseValidatorNeuron):
                 llm = AsyncOpenAI(http_client=client, timeout=10)
                 response = await llm.chat.completions.create(
                     model=self.config.eastworld.llm_model,
+                    reasoning_effort="none",
                     messages=[{"role": "user", "content": prompt}],
                 )
                 content = response.choices[0].message.content.strip()
@@ -298,11 +299,11 @@ class Validator(BaseValidatorNeuron):
             action_log=context.log,
             action_space=context.action,
             action=[],
-            reward=0.0,
+            reward=context.reward,
         )
         return synapse
 
-    async def update_scores(self):
+    async def fetch_and_update_scores(self):
         """Fetch latest miners' scores from Eastworld server"""
         # Update scores every 30 steps.
         if self.step - self.last_update_scores_step < 30:
@@ -332,12 +333,7 @@ class Validator(BaseValidatorNeuron):
 
         # Ensure new_scores is a numpy array.
         new_scores = np.asarray(new_scores)
-
-        # Check if `uids` is already a numpy array and copy it to avoid the warning.
-        if isinstance(uids, np.ndarray):
-            uids_array = uids.copy()
-        else:
-            uids_array = np.array(uids)
+        uids_array = np.array(uids)
 
         # Handle edge case: If either new_scores or uids_array is empty.
         if new_scores.size == 0 or uids_array.size == 0:

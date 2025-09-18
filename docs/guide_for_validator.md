@@ -81,7 +81,7 @@ The Validator utilizes LLMs to generate text environmental perception from struc
 ##### Validating on mainnet:
 
 ```
-python neurons/validator.py --netuid 94 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --neuron.axon_off --wandb.off --neuron.num_concurrent_forwards 8 --eastworld.endpoint_url="https://mainnet.eastworld.ai"
+python neurons/validator.py --netuid 94 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --neuron.axon_off --wandb.off --neuron.num_concurrent_forwards 16 --eastworld.endpoint_url="https://mainnet.eastworld.ai"
 ```
 
 The validator can be deployed as a persistent service using the following orchestration tools:
