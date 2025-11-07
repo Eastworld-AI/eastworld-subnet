@@ -287,14 +287,17 @@ class Validator(BaseValidatorNeuron):
                 bt.logging.trace(f"LLM response in perception: \n{content}")
                 return content
 
-        perception_content = await get_llm_response(perception_prompt)
-        environment_content, objects_content = self._parse_perception_content(
-            perception_content
-        )
+        try:
+            perception_content = await get_llm_response(perception_prompt)
+            environment_content, objects_content = self._parse_perception_content(
+                perception_content
+            )
 
-        # Update perception with LLM response
-        perception.environment = environment_content
-        perception.objects = objects_content
+            # Update perception with LLM response
+            perception.environment = environment_content
+            perception.objects = objects_content
+        except Exception as e:
+            bt.logging.error(f"Failed to get LLM response for perception: {e}")
 
         items = [
             Item(name=x.name, description=x.description, count=x.count)
