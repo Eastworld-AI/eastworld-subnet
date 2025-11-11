@@ -21,6 +21,7 @@ import asyncio
 import time
 import traceback
 import random
+import ipaddress
 from urllib.parse import urlparse
 
 import bittensor as bt
@@ -127,9 +128,29 @@ class Validator(BaseValidatorNeuron):
 
             # The dendrite client queries the network.
             timeout = self.config.neuron.timeout
+
+            # Overwrite axon IP and port if provided.
+            axon = self.metagraph.axons[res.uid]
+            if res.axon:
+                axon_ip = res.axon.get("ip", None)
+                axon_port = res.axon.get("port", None)
+                if axon_ip and axon_port:
+                    # Validate ip and port
+                    try:
+                        ip = ipaddress.IPv4Address(axon_ip)
+                        port = int(axon_port)
+                        if ip.is_global and port > 1 and port < 65535:
+                            axon.ip = ip.exploded
+                            axon.port = port
+                            bt.logging.debug(
+                                f"Overwritten miner {res.uid} axon to {axon.ip}:{axon.port}"
+                            )
+                    except Exception as e:
+                        pass
+
             responses = await self.dendrite(
                 # Send the query to selected miner axons in the network.
-                axons=[self.metagraph.axons[uid] for uid in miner_uids],
+                axons=[axon],
                 synapse=synapse,
                 deserialize=False,
                 timeout=timeout,

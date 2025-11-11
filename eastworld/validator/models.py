@@ -61,4 +61,5 @@ class EWApiResponse(BaseModel):
     turns: int
     uid: int
     key: str
+    axon: dict | None = None
     context: EWContext | None = None

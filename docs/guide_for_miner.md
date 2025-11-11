@@ -110,6 +110,10 @@ pm2 start python -- neurons/miner.py --netuid 94 *The remaining parameters*
 
 ```
 
+## Hiding Miner Axon
+
+If you wish to hide miner's axon info to avoid malicious attacks, run with arbitrary EXTERNAL_PORT and EXTERNAL_IP then use the `scripts/overwrite_axon.py` to submit miner's real endpoint.
+
 
 ## Miner Development
 
