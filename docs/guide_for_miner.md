@@ -14,7 +14,7 @@ SN94 is a subnet that incentivizes the DEVELOPMENT of robust models and architec
 
 ## Running on Testnet
 
-*Always test your miner on Testnet #288 first*
+*Always test your miner on Testnet #333 first*
 
 This project currently provides two demonstration miners. You can run them on the testnet to see how things work:
 
@@ -54,7 +54,7 @@ Create your Bittensor wallet. Then, apply for testnet TAO in this [Discord Post]
 After obtaining your testnet TAO, you can register your miner for the testnet:
 
 ```
-btcli subnets register --network test --netuid 288
+btcli subnets register --network test --netuid 333
 ```
 
 
@@ -68,7 +68,7 @@ btcli subnets register --network test --netuid 288
 # Activate the virtual environment
 source .venv/bin/activate
 
-python neurons/miner.py --subtensor.network test --netuid 288 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --axon.port LOCAL_PORT  --axon.external_port EXTERNAL_PORT --axon.external_ip EXTERNAL_IP
+python neurons/miner.py --subtensor.network test --netuid 333 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --axon.port LOCAL_PORT  --axon.external_port EXTERNAL_PORT --axon.external_ip EXTERNAL_IP
 
 ```
 Ensure the external endpoint is accessible(`curl` the ip:port from a different host) by the validators and that there are no error logs. Soon, you will start receiving synapses.
@@ -138,7 +138,7 @@ The scoring framework is currently undergoing iterative refinement. The weighted
 
 * [Mainnet SN94](https://eastworld.grafana.net/public-dashboards/45a641f0908d4ddc835099412ad533be)
 
-* [Testnet tSN288](https://eastworld.grafana.net/public-dashboards/4f1d6f61166c4bfaa8892c5c1688a1f4)
+* [Testnet tSN333](https://eastworld.grafana.net/public-dashboards/4f1d6f61166c4bfaa8892c5c1688a1f4)
 
 
 ### Score Formula

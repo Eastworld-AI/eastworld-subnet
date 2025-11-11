@@ -8,7 +8,7 @@
 
 ## Validate Process
 
-*Always test your validator on Testnet #288 first*
+*Always test your validator on Testnet #333 first*
 
 The Validator within the subnet architecture serves as the critical assessment role responsible for performance evaluation and scoring of subnet miners. However, unlike conventional subnet implementations, Eastworld's miner evaluation framework constitutes a longitudinal, multidimensional process requiring strategic oversight. Transient, isolated task outcomes prove insufficient for comprehensive capability assessment of AI Agents.
 
@@ -49,8 +49,8 @@ pip install -e .
 After obtaining your testnet TAO, you can register your validator for the testnet:
 
 ```
-btcli subnets register --network test --netuid 288
-btcli stake add --network test --netuid 288
+btcli subnets register --network test --netuid 333
+btcli stake add --network test --netuid 333
 ```
 
 
@@ -65,7 +65,7 @@ btcli stake add --network test --netuid 288
 # Activate the virtual environment
 source .venv/bin/activate
 
-python neurons/validator.py --subtensor.network test --netuid 288 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --neuron.axon_off --wandb.off --eastworld.endpoint_url="https://testnet.eastworld.ai"
+python neurons/validator.py --subtensor.network test --netuid 333 --wallet.name YOUR_WALLET_NAME --wallet.hotkey YOUR_HOTKEY_NAME --logging.debug --neuron.axon_off --wandb.off --eastworld.endpoint_url="https://testnet.eastworld.ai"
 ```
 ##### Running with vLLM or SGLang
 
