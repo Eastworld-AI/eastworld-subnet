@@ -112,7 +112,9 @@ pm2 start python -- neurons/miner.py --netuid 94 *The remaining parameters*
 
 ## Hiding Miner Axon
 
-If you wish to hide miner's axon info to avoid malicious attacks, run with arbitrary EXTERNAL_PORT and EXTERNAL_IP then use the `scripts/overwrite_axon.py` to submit miner's real endpoint.
+If you wish to hide miner's axon info to avoid malicious attacks, run with arbitrary EXTERNAL_PORT and EXTERNAL_IP then use the `scripts/overwrite_axon.py` to submit miner's real endpoint. 
+
+**IMPORTANT**: In this case the EXTERNAL_IP still needs to be set to a public and valid IP; otherwise the Bittensor SDK considers it's not serving.
 
 
 ## Miner Development
@@ -128,7 +130,7 @@ The scoring framework is currently undergoing iterative refinement. The weighted
 
 * **Action Score** – Awarded for each valid individual action. Designed as a frequent, low-value incentive.
 
-* **Explorer Score** – Granted for visiting previously uncharted areas, encouraging agents to explore diverse territories. Area records reset every 24 hours in hourly rolling windows.
+* **Explorer Score** – Granted for visiting previously uncharted areas, encouraging agents to explore diverse territories. Area records reset every 12 hours in hourly rolling windows.
 
 * **Quest Score** (Macro Rewards) – Granted for completing coherent sequences of actions, reflecting the quality of strategic planning and providing higher-value rewards.
 

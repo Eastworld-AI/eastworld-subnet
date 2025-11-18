@@ -1,4 +1,6 @@
-# This script allows overwriting the axon IP and port for a specific miner.
+# This script allows overwriting the axon IP and PORT for a specific miner.
+# IMPORTANT: You must run the miner with a valid and public EXTERNAL_IP even you're going 
+#            to overwrite it here.
 
 import time
 
@@ -20,11 +22,12 @@ def gen_http_auth(hotkey: bt.Keypair) -> httpx.BasicAuth:
 if __name__ == "__main__":
     # For mainnet use https://sn94.eastworld.ai/sn/axon
     endpoint = "https://tsn333.eastworld.ai/sn/axon"
+    # The miner's wallet info
     wallet_name = "default"
     hotkey_name = "default"
     miner_uid = 123
-    overwrite_ip = "1.2.3.4"  # "" to reset overwrite
-    overwrite_port = 12345
+    overwrite_ip = "1.2.3.4"  # The real ip of the miner. Empty string "" to reset overwrite
+    overwrite_port = 12345    # The real port of the miner.
 
     wallet = bt.wallet(name=wallet_name, hotkey=hotkey_name)
     body = {
